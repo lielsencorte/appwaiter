@@ -3,51 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IZAKAYA PDV + DELETE</title>
+    <title>IZAKAYA PDV - FONTE ALTA</title>
     <style>
         :root {
             --bg: #1e1e2e; --card: #181825; --btn-item: #313244;
-            --texto: #cdd6f4; --subtexto: #7f849c;
+            --texto: #ffffff; --subtexto: #bac2de;
             --primaria: #89b4fa; --sucesso: #a6e3a1; 
             --alerta: #f9e2af; --perigo: #f38ba8; --borda: #45475a;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--texto); font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        body { background: var(--bg); color: var(--texto); font-family: system-ui, -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-        .pdv-container { width: 95%; max-width: 400px; background: var(--card); border-radius: 12px; padding: 10px; border: 1px solid var(--borda); }
+        .pdv-container { width: 98%; max-width: 450px; background: var(--card); border-radius: 16px; padding: 15px; border: 2px solid var(--borda); }
 
-        .grid-mesas { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-bottom: 10px; }
-        .btn-mesa { aspect-ratio: 1/1; border: 1px solid var(--borda); background: #111; color: var(--texto); font-size: 0.8rem; font-weight: bold; border-radius: 4px; cursor: pointer; }
-        .btn-mesa.sel { border: 2px solid #fff; transform: scale(1.1); }
+        /* TABELA DE MESAS MAIOR */
+        .grid-mesas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; }
+        .btn-mesa { aspect-ratio: 1.2/1; border: 1px solid var(--borda); background: #111; color: var(--texto); font-size: 1.2rem; font-weight: 900; border-radius: 8px; cursor: pointer; }
+        .btn-mesa.sel { border: 3px solid #fff; transform: scale(1.05); }
         .m-lanc { background: var(--alerta) !important; color: #000 !important; }
         .m-imp { background: var(--perigo) !important; color: #fff !important; }
         .m-pago { background: var(--sucesso) !important; color: #000 !important; }
 
-        .display { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--borda); }
-        .display b { font-size: 1.8rem; color: var(--primaria); }
+        /* DISPLAY COM FONTE GRANDE */
+        .display { background: rgba(0,0,0,0.4); border-radius: 12px; padding: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--borda); }
+        .display span { font-size: 1.1rem; font-weight: bold; color: var(--subtexto); }
+        .display b { font-size: 2.5rem; color: var(--sucesso); letter-spacing: -1px; }
 
-        .grid-menu { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
-        .btn-item { aspect-ratio: 1/1; background: var(--btn-item); border: 1px solid var(--borda); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; color: var(--texto); border-radius: 8px; }
-        .btn-item .n { font-size: 0.5rem; font-weight: bold; text-align: center; margin-bottom: 2px; text-transform: uppercase; }
-        .btn-item .p { font-size: 0.75rem; font-weight: 800; color: var(--primaria); }
+        /* MENU COM TEXTO LEGÍVEL */
+        .grid-menu { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .btn-item { aspect-ratio: 1/1; background: var(--btn-item); border: 1px solid var(--borda); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; color: var(--texto); border-radius: 12px; padding: 5px; }
+        .btn-item .n { font-size: 0.75rem; font-weight: 800; text-align: center; margin-bottom: 5px; text-transform: uppercase; line-height: 1.1; }
+        .btn-item .p { font-size: 1rem; font-weight: 900; color: var(--primaria); }
 
-        .acoes { display: flex; gap: 5px; margin-top: 10px; }
-        .btn-acao { flex: 1; padding: 12px 2px; border: none; font-weight: bold; border-radius: 8px; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; }
+        /* BOTÕES DE AÇÃO */
+        .acoes { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-acao { flex: 1; padding: 18px 5px; border: none; font-weight: 900; border-radius: 12px; font-size: 1rem; cursor: pointer; text-transform: uppercase; }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; flex-direction: column; justify-content: center; align-items: center; }
-        .modal-c { background: var(--card); padding: 15px; border-radius: 12px; width: 90%; max-height: 85%; overflow-y: auto; border: 1px solid var(--borda); }
+        /* MODAIS */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; flex-direction: column; justify-content: center; align-items: center; }
+        .modal-c { background: var(--card); padding: 25px; border-radius: 20px; width: 92%; max-height: 85%; overflow-y: auto; border: 2px solid var(--borda); }
         
-        /* Estilo da linha do relatório com botão X */
-        .r-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #333; }
-        .btn-del { background: var(--perigo); color: white; border: none; border-radius: 4px; padding: 4px 10px; font-weight: bold; cursor: pointer; margin-left: 10px; }
+        .r-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #333; font-size: 1.1rem; }
+        .btn-del { background: var(--perigo); color: white; border: none; border-radius: 8px; padding: 8px 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
 
         @media print {
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
-            #print-area { position: absolute; left: 0; top: 0; width: 100%; background: #fff !important; color: #000 !important; }
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; background: #fff !important; color: #000 !important; font-size: 14pt; }
             .no-print { display: none !important; }
-            .btn-del { display: none !important; }
         }
     </style>
 </head>
@@ -55,26 +59,29 @@
 
     <div class="pdv-container">
         <div class="grid-mesas" id="div-mesas"></div>
+        
         <div class="display">
             <span id="label-mesa">MESA --</span>
             <b id="val-total">R$ 0,00</b>
         </div>
+
         <div class="grid-menu" id="div-menu"></div>
+
         <div class="acoes">
-            <button class="btn-acao" onclick="abrirRel()" style="background:#333; color:#fff; flex:0; width:50px">📊</button>
-            <button id="btn-10" class="btn-acao" onclick="add10()" style="background:#111; color:#777; flex:0; width:50px">+10%</button>
+            <button class="btn-acao" onclick="abrirRel()" style="background:#333; color:#fff; flex:0; width:70px; font-size: 1.5rem;">📊</button>
+            <button id="btn-10" class="btn-acao" onclick="add10()" style="background:#111; color:#777; flex:0; width:70px; font-size: 0.9rem;">+10%</button>
             <button id="btn-f" class="btn-acao" onclick="fluxo()" style="background:#313244; color:#fff">LIVRE</button>
         </div>
     </div>
 
     <div id="mod-rel" class="modal">
         <div class="modal-c" id="print-area">
-            <h2 style="text-align:center">IZAKAYA CENTRAL</h2>
-            <p style="text-align:center; margin-bottom:10px">MESA <span id="r-mesa"></span></p>
+            <h1 style="text-align:center; color: var(--primaria); margin-bottom: 5px;">IZAKAYA</h1>
+            <h2 style="text-align:center; margin-bottom:20px">CONTA MESA <span id="r-mesa"></span></h2>
             <div id="r-lista"></div>
-            <div style="margin-top:10px; border-top:1px solid #555; padding-top:10px">
-                <p id="r-taxa" style="text-align:right; font-size:0.8rem"></p>
-                <h3 id="r-total" style="text-align:right"></h3>
+            <div style="margin-top:20px; border-top:2px solid #555; padding-top:15px">
+                <p id="r-taxa" style="text-align:right; font-size:1rem; color: var(--sucesso)"></p>
+                <h2 id="r-total" style="text-align:right; font-size: 2.2rem;"></h2>
             </div>
             <div class="acoes no-print">
                 <button class="btn-acao" onclick="fechar()" style="background:#444; color:#fff">VOLTAR</button>
@@ -84,24 +91,24 @@
     </div>
 
     <div id="mod-ger" class="modal">
-        <div class="modal-c" style="text-align:center">
-            <span style="font-size:4rem">👨🏿‍💼</span>
-            <p style="margin:15px 0">Confirmar pagamento da Mesa <span id="g-mesa"></span>?</p>
+        <div class="modal-c" style="text-align:center; padding: 40px 20px;">
+            <span style="font-size:6rem">👨🏿‍💼</span>
+            <h2 style="margin:20px 0">Confirmar pagamento da Mesa <span id="g-mesa"></span>?</h2>
             <div class="acoes">
                 <button class="btn-acao" onclick="fechar()" style="background:#444; color:#fff">NÃO</button>
-                <button class="btn-acao" onclick="finalizar()" style="background:var(--sucesso); color:#000">SIM</button>
+                <button class="btn-acao" onclick="finalizar()" style="background:var(--sucesso); color:#000">SIM, PAGO</button>
             </div>
         </div>
     </div>
 
     <script>
         let mSel = null;
-        let db = JSON.parse(localStorage.getItem('IZK_DATA_V3')) || {};
+        let db = JSON.parse(localStorage.getItem('IZK_DATA_V4')) || {};
         const itens = [
-            {n:'Gyoza', p:28}, {n:'Karaage', p:32}, {n:'Edamame', p:18}, {n:'Shimeji', p:35}, {n:'Sunomono', p:15},
-            {n:'Yakitori', p:12}, {n:'Tebasaki', p:26}, {n:'Okonomiyaki', p:42}, {n:'Takoyaki', p:30}, {n:'Tempura', p:38},
+            {n:'Gyoza (6)', p:28}, {n:'Karaage', p:32}, {n:'Edamame', p:18}, {n:'Shimeji', p:35}, {n:'Sunomono', p:15},
+            {n:'Yakitori', p:12}, {n:'Tebasaki', p:26}, {n:'Takoyaki', p:30}, {n:'Tempura', p:38}, {n:'Miso', p:10},
             {n:'Saque Dose', p:22}, {n:'Saque Gar.', p:85}, {n:'Chopp', p:14}, {n:'Cerveja JP', p:18}, {n:'Highball', p:28},
-            {n:'Cha Verde', p:8}, {n:'Melona', p:12}, {n:'Misso', p:10}, {n:'Suco', p:9}, {n:'Agua', p:6}
+            {n:'Cha Verde', p:8}, {n:'Melona', p:12}, {n:'Suco', p:9}, {n:'Agua S/G', p:6}, {n:'Agua C/G', p:7}
         ];
 
         function render() {
@@ -128,7 +135,7 @@
             m.t -= m.i[idx].p;
             m.i.splice(idx, 1);
             if(m.i.length === 0) m.s = 'livre';
-            save(); att(); abrirRel(); // Atualiza a lista do relatório na hora
+            save(); att(); abrirRel();
         }
 
         function att() {
@@ -137,6 +144,7 @@
             document.getElementById('val-total').innerText = 'R$ ' + total.toFixed(2);
             document.getElementById('label-mesa').innerText = 'MESA ' + mSel;
             document.getElementById('btn-10').style.background = m.x ? 'var(--sucesso)' : '#111';
+            document.getElementById('btn-10').style.color = m.x ? '#000' : '#777';
             const bf = document.getElementById('btn-f');
             if(m.s==='lanc') { bf.innerText='IMPRIMIR'; bf.style.background='var(--perigo)'; }
             else if(m.s==='imp') { bf.innerText='PAGAR'; bf.style.background='var(--sucesso)'; bf.style.color='#000'; }
@@ -158,26 +166,26 @@
             document.getElementById('r-lista').innerHTML = m.i.map((it, idx) => `
                 <div class="r-item">
                     <span>${it.n}</span>
-                    <span>
-                        <b>R$ ${it.p.toFixed(2)}</b>
+                    <span style="display: flex; align-items: center;">
+                        <b style="margin-right: 15px;">R$ ${it.p.toFixed(2)}</b>
                         <button class="btn-del no-print" onclick="removerItem(${idx})">X</button>
                     </span>
                 </div>
             `).join('');
-            document.getElementById('r-taxa').innerText = m.x ? "Taxa de Serviço (10%) Inclusa" : "";
-            document.getElementById('r-total').innerText = "TOTAL: R$ " + (m.x ? m.t * 1.1 : m.t).toFixed(2);
+            document.getElementById('r-taxa').innerText = m.x ? "+ 10% de Serviço Incluso" : "";
+            document.getElementById('r-total').innerText = "R$ " + (m.x ? m.t * 1.1 : m.t).toFixed(2);
             document.getElementById('mod-rel').style.display='flex';
         }
 
         function add10() { if(mSel) { db[mSel].x = !db[mSel].x; save(); att(); } }
         function finalizar() { db[mSel].s='pago'; fechar(); save(); att(); }
         function fechar() { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); }
-        function save() { localStorage.setItem('IZK_DATA_V3', JSON.stringify(db)); }
+        function save() { localStorage.setItem('IZK_DATA_V4', JSON.stringify(db)); }
 
         const mnu = document.getElementById('div-menu');
         itens.forEach(it => {
             const b = document.createElement('button'); b.className = 'btn-item';
-            b.innerHTML = `<span class="n">${it.n}</span><span class="p">R$${it.p}</span>`;
+            b.innerHTML = `<span class="n">${it.n}</span><span class="p">R$ ${it.p}</span>`;
             b.onclick = () => lancar(it); mnu.appendChild(b);
         });
         render();
