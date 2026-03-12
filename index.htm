@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PDV FLEX PRO FINAL</title>
+    <title>PDV PRINTER READY</title>
     <style>
         :root {
             --bg: #1e1e2e; --card: #181825; --btn-item: #313244;
@@ -13,61 +13,43 @@
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: var(--texto); font-family: system-ui, -apple-system, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        body { margin: 0; background: var(--bg); color: var(--texto); font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
 
-        .pdv-container {
-            width: 400px; background: var(--card); border-radius: 16px;
-            padding: 12px; border: 1px solid var(--borda); position: relative;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-        }
+        .pdv-container { width: 400px; background: var(--card); border-radius: 16px; padding: 12px; border: 1px solid var(--borda); position: relative; }
 
-        /* TABELA DE MESAS */
         .grid-mesas { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-bottom: 12px; }
-        .btn-mesa {
-            aspect-ratio: 1/1; border: 1px solid var(--borda); background: #111; 
-            color: var(--texto); font-size: 0.9rem; font-weight: bold; border-radius: 6px; cursor: pointer;
-        }
-        .btn-mesa.selecionada { border: 2px solid #fff; transform: scale(1.05); z-index: 2; }
+        .btn-mesa { aspect-ratio: 1/1; border: 1px solid var(--borda); background: #111; color: var(--texto); font-size: 0.9rem; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .btn-mesa.selecionada { border: 2px solid #fff; transform: scale(1.05); }
         .status-lancando { background: var(--alerta) !important; color: #000 !important; }
         .status-impresso { background: var(--perigo) !important; color: #fff !important; }
         .status-limpeza { background: var(--sucesso) !important; color: #000 !important; }
 
-        /* DISPLAY */
-        .display-pdv {
-            background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid var(--borda); padding: 15px;
-            margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
-        }
+        .display-pdv { background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid var(--borda); padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .display-pdv b { font-size: 2rem; color: var(--primaria); }
 
-        /* MENU CALCULADORA 1X1 */
         .grid-menu { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-        .btn-item {
-            aspect-ratio: 1/1; background: var(--btn-item); border: 1px solid var(--borda); 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; color: var(--texto); border-radius: 10px;
-        }
-        .btn-item:active { opacity: 0.7; }
-        .btn-item .nome { font-size: 0.6rem; font-weight: 700; text-align: center; margin-bottom: 4px; text-transform: uppercase; }
+        .btn-item { aspect-ratio: 1/1; background: var(--btn-item); border: 1px solid var(--borda); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; color: var(--texto); border-radius: 10px; }
+        .btn-item .nome { font-size: 0.6rem; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; }
         .btn-item .preco { font-size: 0.8rem; font-weight: 800; color: var(--primaria); }
 
-        /* AÇÕES */
         .acoes { display: flex; gap: 8px; margin-top: 12px; }
         .btn-acao { flex: 1; padding: 15px 5px; border: none; font-weight: 800; border-radius: 10px; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; }
         .btn-sec { background: #313244; color: var(--texto); width: 60px; flex: 0; font-size: 1.2rem; }
         .btn-taxa { background: #1a1a1a; border: 1px solid var(--borda); color: var(--subtexto); width: 60px; flex: 0; font-size: 0.7rem; }
         .taxa-on { background: var(--sucesso) !important; color: #000 !important; }
 
-        /* MODAIS */
-        .modal {
-            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 100; padding: 20px; flex-direction: column; 
-            justify-content: center; align-items: center; border-radius: 16px; box-sizing: border-box;
-        }
-        .modal-content { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--borda); width: 100%; max-height: 80%; display: flex; flex-direction: column; }
-        .lista { flex: 1; overflow-y: auto; margin: 10px 0; }
-        .linha { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #333; }
+        .modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; padding: 20px; flex-direction: column; justify-content: center; align-items: center; border-radius: 16px; }
+        .modal-content { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--borda); width: 100%; max-height: 90%; display: flex; flex-direction: column; }
+        .lista { flex: 1; overflow-y: auto; margin: 10px 0; border-top: 1px solid #333; }
+        .linha { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; }
 
-        .gerente-box { background: var(--card); padding: 25px; border-radius: 16px; border: 2px solid var(--primaria); text-align: center; width: 90%; }
+        /* ESTILO PARA IMPRESSÃO */
+        @media print {
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; color: #000; background: #fff; padding: 10px; }
+            .no-print { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -75,7 +57,7 @@
     <div class="pdv-container">
         <div class="grid-mesas" id="mesas"></div>
         <div class="display-pdv">
-            <span id="txt-mesa" style="font-weight: bold;">MESA --</span>
+            <span id="txt-mesa">MESA --</span>
             <b id="total">R$ 0,00</b>
         </div>
         <div class="grid-menu" id="menu"></div>
@@ -86,17 +68,25 @@
         </div>
 
         <div id="modal-rel" class="modal">
-            <div class="modal-content">
-                <h3 style="margin:0; text-align:center">ITENS MESA <span id="rel-id"></span></h3>
+            <div class="modal-content" id="print-area">
+                <h3 style="margin:0; text-align:center">MESA <span id="rel-id"></span></h3>
+                <p style="text-align: center; font-size: 0.7rem;" class="only-print">Comprovante de Consumo</p>
                 <div id="rel-corpo" class="lista"></div>
-                <button class="btn-acao" onclick="fecharModal('modal-rel')" style="background:var(--primaria); color:#000;">VOLTAR</button>
+                <div style="text-align: right; font-weight: bold; margin-top: 10px;">
+                    <span id="rel-taxa-txt"></span><br>
+                    TOTAL: <span id="rel-total-txt"></span>
+                </div>
+                <div class="acoes no-print">
+                    <button class="btn-acao" onclick="fecharModal('modal-rel')" style="background:#333; color:#fff;">VOLTAR</button>
+                    <button class="btn-acao" onclick="imprimirCupom()" style="background:var(--primaria); color:#000;">🖨️ IMPRIMIR</button>
+                </div>
             </div>
         </div>
 
         <div id="modal-gerente" class="modal">
-            <div class="gerente-box">
+            <div class="modal-content" style="text-align: center; max-height: 300px;">
                 <span style="font-size:4.5rem; display: block;">👨🏿‍💼</span>
-                <div style="font-weight:bold; margin: 15px 0; font-size: 1.1rem;">Confirma pagamento da Mesa <span id="pago-id"></span>?</div>
+                <p style="font-weight:bold;">Confirma pagamento da Mesa <span id="pago-id"></span>?</p>
                 <div style="display:flex; gap:10px">
                     <button class="btn-acao" onclick="fecharModal('modal-gerente')" style="background:#333; color:#fff">NÃO</button>
                     <button class="btn-acao" onclick="confirmarPago()" style="background:var(--sucesso); color:#000">SIM</button>
@@ -107,8 +97,7 @@
 
     <script>
         let mesaSel = null;
-        let db = JSON.parse(localStorage.getItem('pdv_v10_data')) || {};
-
+        let db = JSON.parse(localStorage.getItem('pdv_v11_data')) || {};
         const produtos = [
             {n:'BURGER', p:25}, {n:'PIZZA', p:30}, {n:'BACON', p:32}, {n:'FRITAS P', p:15}, {n:'FRITAS G', p:25},
             {n:'CARNE', p:45}, {n:'OVO', p:20}, {n:'ALFACE', p:18}, {n:'PASTEL', p:12}, {n:'SALADA', p:28},
@@ -116,7 +105,7 @@
             {n:'CERVEJA', p:7}, {n:'CHOPP', p:12}, {n:'VODKA', p:15}, {n:'CAFE', p:6}, {n:'SORVETE', p:10}
         ];
 
-        function salvar() { localStorage.setItem('pdv_v10_data', JSON.stringify(db)); }
+        function salvar() { localStorage.setItem('pdv_v11_data', JSON.stringify(db)); }
 
         function renderMesas() {
             const div = document.getElementById('mesas'); div.innerHTML = '';
@@ -131,48 +120,34 @@
         }
 
         function lancar(p) {
-            if(!mesaSel) return alert("Selecione uma mesa primeiro!");
+            if(!mesaSel) return;
             let m = db[mesaSel];
             if(m.status === 'limpeza' || m.status === 'livre') { m.itens=[]; m.total=0; m.taxa=false; }
             m.status = 'lancando';
-            m.itens.push({...p});
-            m.total += p.p;
+            m.itens.push({...p}); m.total += p.p;
             salvar(); atualizar();
         }
 
         function toggleTaxa() { if(mesaSel) { db[mesaSel].taxa = !db[mesaSel].taxa; salvar(); atualizar(); } }
 
-        function fluxo() {
-            if(!mesaSel) return;
-            let m = db[mesaSel];
-            if(m.status === 'lancando') { m.status = 'impresso'; }
-            else if(m.status === 'impresso') { 
-                document.getElementById('pago-id').innerText = mesaSel;
-                document.getElementById('modal-gerente').style.display='flex';
-                return; 
-            }
-            else if(m.status === 'limpeza') { m.status = 'livre'; m.total=0; m.itens=[]; m.taxa=false; }
-            salvar(); atualizar();
-        }
-
-        function confirmarPago() { 
-            db[mesaSel].status = 'limpeza'; 
-            fecharModal('modal-gerente'); 
-            salvar(); atualizar(); 
-        }
-
         function verRelatorio() {
             if(!mesaSel) return;
             document.getElementById('rel-id').innerText = mesaSel;
+            const m = db[mesaSel];
+            const final = m.taxa ? m.total * 1.1 : m.total;
+            document.getElementById('rel-taxa-txt').innerText = m.taxa ? "Taxa Serv. (10%): Sim" : "";
+            document.getElementById('rel-total-txt').innerText = `R$ ${final.toFixed(2)}`;
             const corpo = document.getElementById('rel-corpo');
-            corpo.innerHTML = db[mesaSel].itens.map((it, idx) => `
+            corpo.innerHTML = m.itens.map((it, idx) => `
                 <div class="linha">
-                    <span>${it.n} - <b>R$${it.p.toFixed(2)}</b></span>
-                    <button onclick="remover(${idx})" style="background:var(--perigo); border:none; color:#fff; padding:5px 12px; border-radius:6px; cursor:pointer">X</button>
+                    <span>${it.n}</span>
+                    <span><b>R$${it.p.toFixed(2)}</b> <button class="no-print" onclick="remover(${idx})" style="background:red; color:white; border:none; border-radius:4px; margin-left:10px;">X</button></span>
                 </div>
             `).join('');
             document.getElementById('modal-rel').style.display = 'flex';
         }
+
+        function imprimirCupom() { window.print(); }
 
         function remover(idx) {
             db[mesaSel].total -= db[mesaSel].itens[idx].p;
@@ -181,6 +156,16 @@
             salvar(); atualizar(); verRelatorio();
         }
 
+        function fluxo() {
+            if(!mesaSel) return;
+            let m = db[mesaSel];
+            if(m.status === 'lancando') m.status = 'impresso';
+            else if(m.status === 'impresso') { document.getElementById('pago-id').innerText = mesaSel; document.getElementById('modal-gerente').style.display='flex'; return; }
+            else if(m.status === 'limpeza') { m.status = 'livre'; m.total=0; m.itens=[]; m.taxa=false; }
+            salvar(); atualizar();
+        }
+
+        function confirmarPago() { db[mesaSel].status = 'limpeza'; fecharModal('modal-gerente'); salvar(); atualizar(); }
         function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function atualizar() {
@@ -198,16 +183,12 @@
             else { btn.innerText="LIVRE"; btn.style.background="var(--btn-item)"; btn.style.color="var(--subtexto)"; }
         }
 
-        // INIT MENU
         const menu = document.getElementById('menu');
         produtos.forEach((p) => {
-            const b = document.createElement('button');
-            b.className = 'btn-item';
+            const b = document.createElement('button'); b.className = 'btn-item';
             b.innerHTML = `<div class="nome">${p.n}</div><div class="preco">R$${p.p}</div>`;
-            b.onclick = () => lancar(p);
-            menu.appendChild(b);
+            b.onclick = () => lancar(p); menu.appendChild(b);
         });
-
         renderMesas();
     </script>
 </body>
