@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PDV PRINTER READY</title>
+    <title>IZAKAYA PDV PRO</title>
     <style>
         :root {
             --bg: #1e1e2e; --card: #181825; --btn-item: #313244;
@@ -29,7 +29,7 @@
 
         .grid-menu { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
         .btn-item { aspect-ratio: 1/1; background: var(--btn-item); border: 1px solid var(--borda); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; color: var(--texto); border-radius: 10px; }
-        .btn-item .nome { font-size: 0.6rem; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; }
+        .btn-item .nome { font-size: 0.55rem; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; text-align: center; }
         .btn-item .preco { font-size: 0.8rem; font-weight: 800; color: var(--primaria); }
 
         .acoes { display: flex; gap: 8px; margin-top: 12px; }
@@ -43,153 +43,7 @@
         .lista { flex: 1; overflow-y: auto; margin: 10px 0; border-top: 1px solid #333; }
         .linha { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; }
 
-        /* ESTILO PARA IMPRESSÃO */
         @media print {
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
-            #print-area { position: absolute; left: 0; top: 0; width: 100%; color: #000; background: #fff; padding: 10px; }
-            .no-print { display: none !important; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="pdv-container">
-        <div class="grid-mesas" id="mesas"></div>
-        <div class="display-pdv">
-            <span id="txt-mesa">MESA --</span>
-            <b id="total">R$ 0,00</b>
-        </div>
-        <div class="grid-menu" id="menu"></div>
-        <div class="acoes">
-            <button class="btn-acao btn-sec" onclick="verRelatorio()">📊</button>
-            <button id="btn-10" class="btn-acao btn-taxa" onclick="toggleTaxa()">+10%</button>
-            <button id="btn-main" class="btn-acao" onclick="fluxo()" style="background: var(--btn-item); color: var(--subtexto);">LIVRE</button>
-        </div>
-
-        <div id="modal-rel" class="modal">
-            <div class="modal-content" id="print-area">
-                <h3 style="margin:0; text-align:center">MESA <span id="rel-id"></span></h3>
-                <p style="text-align: center; font-size: 0.7rem;" class="only-print">Comprovante de Consumo</p>
-                <div id="rel-corpo" class="lista"></div>
-                <div style="text-align: right; font-weight: bold; margin-top: 10px;">
-                    <span id="rel-taxa-txt"></span><br>
-                    TOTAL: <span id="rel-total-txt"></span>
-                </div>
-                <div class="acoes no-print">
-                    <button class="btn-acao" onclick="fecharModal('modal-rel')" style="background:#333; color:#fff;">VOLTAR</button>
-                    <button class="btn-acao" onclick="imprimirCupom()" style="background:var(--primaria); color:#000;">🖨️ IMPRIMIR</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal-gerente" class="modal">
-            <div class="modal-content" style="text-align: center; max-height: 300px;">
-                <span style="font-size:4.5rem; display: block;">👨🏿‍💼</span>
-                <p style="font-weight:bold;">Confirma pagamento da Mesa <span id="pago-id"></span>?</p>
-                <div style="display:flex; gap:10px">
-                    <button class="btn-acao" onclick="fecharModal('modal-gerente')" style="background:#333; color:#fff">NÃO</button>
-                    <button class="btn-acao" onclick="confirmarPago()" style="background:var(--sucesso); color:#000">SIM</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let mesaSel = null;
-        let db = JSON.parse(localStorage.getItem('pdv_v11_data')) || {};
-        const produtos = [
-            {n:'BURGER', p:25}, {n:'PIZZA', p:30}, {n:'BACON', p:32}, {n:'FRITAS P', p:15}, {n:'FRITAS G', p:25},
-            {n:'CARNE', p:45}, {n:'OVO', p:20}, {n:'ALFACE', p:18}, {n:'PASTEL', p:12}, {n:'SALADA', p:28},
-            {n:'DOCE', p:12}, {n:'TACO', p:18}, {n:'AGUA', p:5}, {n:'REFRI', p:8}, {n:'SUCO', p:10},
-            {n:'CERVEJA', p:7}, {n:'CHOPP', p:12}, {n:'VODKA', p:15}, {n:'CAFE', p:6}, {n:'SORVETE', p:10}
-        ];
-
-        function salvar() { localStorage.setItem('pdv_v11_data', JSON.stringify(db)); }
-
-        function renderMesas() {
-            const div = document.getElementById('mesas'); div.innerHTML = '';
-            for(let i=1; i<=20; i++){
-                if(!db[i]) db[i] = {status:'livre', total:0, itens:[], taxa:false};
-                const b = document.createElement('button');
-                b.className = `btn-mesa status-${db[i].status} ${mesaSel==i?'selecionada':''}`;
-                b.innerText = i;
-                b.onclick = () => { mesaSel = i; atualizar(); };
-                div.appendChild(b);
-            }
-        }
-
-        function lancar(p) {
-            if(!mesaSel) return;
-            let m = db[mesaSel];
-            if(m.status === 'limpeza' || m.status === 'livre') { m.itens=[]; m.total=0; m.taxa=false; }
-            m.status = 'lancando';
-            m.itens.push({...p}); m.total += p.p;
-            salvar(); atualizar();
-        }
-
-        function toggleTaxa() { if(mesaSel) { db[mesaSel].taxa = !db[mesaSel].taxa; salvar(); atualizar(); } }
-
-        function verRelatorio() {
-            if(!mesaSel) return;
-            document.getElementById('rel-id').innerText = mesaSel;
-            const m = db[mesaSel];
-            const final = m.taxa ? m.total * 1.1 : m.total;
-            document.getElementById('rel-taxa-txt').innerText = m.taxa ? "Taxa Serv. (10%): Sim" : "";
-            document.getElementById('rel-total-txt').innerText = `R$ ${final.toFixed(2)}`;
-            const corpo = document.getElementById('rel-corpo');
-            corpo.innerHTML = m.itens.map((it, idx) => `
-                <div class="linha">
-                    <span>${it.n}</span>
-                    <span><b>R$${it.p.toFixed(2)}</b> <button class="no-print" onclick="remover(${idx})" style="background:red; color:white; border:none; border-radius:4px; margin-left:10px;">X</button></span>
-                </div>
-            `).join('');
-            document.getElementById('modal-rel').style.display = 'flex';
-        }
-
-        function imprimirCupom() { window.print(); }
-
-        function remover(idx) {
-            db[mesaSel].total -= db[mesaSel].itens[idx].p;
-            db[mesaSel].itens.splice(idx, 1);
-            if(db[mesaSel].itens.length === 0) db[mesaSel].status = 'livre';
-            salvar(); atualizar(); verRelatorio();
-        }
-
-        function fluxo() {
-            if(!mesaSel) return;
-            let m = db[mesaSel];
-            if(m.status === 'lancando') m.status = 'impresso';
-            else if(m.status === 'impresso') { document.getElementById('pago-id').innerText = mesaSel; document.getElementById('modal-gerente').style.display='flex'; return; }
-            else if(m.status === 'limpeza') { m.status = 'livre'; m.total=0; m.itens=[]; m.taxa=false; }
-            salvar(); atualizar();
-        }
-
-        function confirmarPago() { db[mesaSel].status = 'limpeza'; fecharModal('modal-gerente'); salvar(); atualizar(); }
-        function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        function atualizar() {
-            renderMesas();
-            if(!mesaSel) return;
-            const m = db[mesaSel];
-            const valorFinal = m.taxa ? m.total * 1.1 : m.total;
-            document.getElementById('total').innerText = `R$ ${valorFinal.toFixed(2)}`;
-            document.getElementById('txt-mesa').innerText = `MESA ${mesaSel}`;
-            document.getElementById('btn-10').className = `btn-acao btn-taxa ${m.taxa ? 'taxa-on' : ''}`;
-            const btn = document.getElementById('btn-main');
-            if(m.status==='lancando'){ btn.innerText="IMPRIMIR"; btn.style.background="var(--perigo)"; btn.style.color="#fff"; }
-            else if(m.status==='impresso'){ btn.innerText="PAGAR"; btn.style.background="var(--sucesso)"; btn.style.color="#000"; }
-            else if(m.status==='limpeza'){ btn.innerText="LIMPAR"; btn.style.background="#fff"; btn.style.color="#000"; }
-            else { btn.innerText="LIVRE"; btn.style.background="var(--btn-item)"; btn.style.color="var(--subtexto)"; }
-        }
-
-        const menu = document.getElementById('menu');
-        produtos.forEach((p) => {
-            const b = document.createElement('button'); b.className = 'btn-item';
-            b.innerHTML = `<div class="nome">${p.n}</div><div class="preco">R$${p.p}</div>`;
-            b.onclick = () => lancar(p); menu.appendChild(b);
-        });
-        renderMesas();
-    </script>
-</body>
-</html>
+            #print-area { position: absolute; left: 0; top: 0; width: 1
